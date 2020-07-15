@@ -12,12 +12,19 @@
   <script type="text/paperscript" canvas="myCanvas">
 
     var values = {
-      amount: globals.polygonWidth
+      amount: globals.polygonWidth,
+      sides: globals.sideCount,
     };
 
-    globals.newWidth = function(newWidth) {
-      values.amount = newWidth;
+    globals.newPolygonDensity = function(newPolygonDensity) {
+      values.amount = newPolygonDensity;
       handleImage('girl-pearl-earring');
+    }
+    
+    globals.newSideCount = function(newSideCount) {
+      values.sides = newSideCount;
+      handleImage('girl-pearl-earring');
+      piece = createPiece();
     }
 
     var raster,
@@ -41,7 +48,7 @@
       var group = new Group();
       var hexagon = new Path.RegularPolygon({
         center: view.center,
-        sides: 6,
+        sides: values.sides,
         radius: 50,
         fillColor: 'gray',
         parent: group
@@ -149,32 +156,46 @@
 
 <body>
   <script type="text/javascript">
-    window.globals = { polygonWidth: Math.floor(Math.random() * 40) }
+    window.globals = {
+      polygonWidth: Math.floor(Math.random() * 40),
+      sideCount: 6,
+    }
 
     window.onload = function () {
-      var polygonWidths = document.getElementsByName("widthOfPolygons");
+      // Controls pixel/polygon density
       document.getElementById("changePolygons").onclick = function () {
-        console.log(window.globals)
-        for (var i = 0, length = polygonWidths.length; i < length; i++) {
-          if (polygonWidths[i].checked) {
-            const newWidth = polygonWidths[i].value;
-            window.globals.newWidth(parseInt(newWidth))
-            console.log(window.globals)
+        var densityRadios = document.getElementsByName("densityOfPolygons");
+        for (var i = 0, length = densityRadios.length; i < length; i++) {
+          if (densityRadios[i].checked) {
+            window.globals.newPolygonDensity(parseInt(densityRadios[i].value))
             break;
           }
         }
       }
+      // Controls pixel/polygon sidecount
+      document.getElementById("changeSideCount").onclick = function () {
+        let newSideValue = document.getElementById('numberOfSides').value;
+        window.globals.newSideCount(parseInt(newSideValue))
+      }
     }
   </script>
-  <label>5</label>
-  <input type="radio" name="widthOfPolygons" value="5">
-  <label>10</label>
-  <input type="radio" name="widthOfPolygons" value="10">
-  <label>20</label>
-  <input type="radio" name="widthOfPolygons" value="20">
-  <label>40</label>
-  <input type="radio" name="widthOfPolygons" value="40">
-  <button id="changePolygons">CHANGE POLYGONS</button>
+  <div>
+    <h1>Density</h1>
+    <label>5</label>
+    <input type="radio" name="densityOfPolygons" value="5">
+    <label>10</label>
+    <input type="radio" name="densityOfPolygons" value="10">
+    <label>20</label>
+    <input type="radio" name="densityOfPolygons" value="20">
+    <label>40</label>
+    <input type="radio" name="densityOfPolygons" value="40">
+    <button id="changePolygons">CHANGE DENSITY</button>
+  </div>
+  <div>
+    <h1>Side Count</h1>
+    <input type="range" id="numberOfSides" min="1" max="12" default="6" step="1">
+    <button id="changeSideCount">CHANGE SIDE COUNT</button>
+  </div>
   <canvas id="myCanvas">
     <img src="assets/images/girl-pearl-earring.jpg" alt="girl with pearl earring painting" id="girl-pearl-earring">
   </canvas>
