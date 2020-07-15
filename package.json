@@ -1,0 +1,14 @@
+{
+  "name": "raster",
+  "version": "1.0.0",
+  "description": "Paper.js Raster",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Chris Sanchez",
+  "license": "ISC",
+  "dependencies": {
+    "paper": "^0.12.11"
+  }
+}
