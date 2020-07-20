@@ -14,6 +14,8 @@
     var values = {
       amount: globals.polygonWidth,
       sides: globals.sideCount,
+      topHexColor: globals.topColor,
+      rightHexColor: globals.rightColor,
     };
 
     globals.newPolygonDensity = function(newPolygonDensity) {
@@ -25,6 +27,16 @@
       values.sides = newSideCount;
       handleImage('girl-pearl-earring');
       piece = createPiece();
+    }
+
+    globals.newTopHexColor = function(newTopHexColor) {
+      values.topHexColor = newTopHexColor;
+      handleImage('girl-pearl-earring');
+    }
+
+    globals.newRightHexColor = function(newRightHexColor) {
+      values.rightHexColor = newRightHexColor;
+      handleImage('girl-pearl-earring');
     }
 
     var raster,
@@ -59,7 +71,7 @@
           parent: group,
           fillColor: i == 0 ? 'white' : 'black'
         });
-        for (var j = 0; j < 3; j++) {
+        for (var j = 0; j < 3; j++) { // 'j < 9' for honeycomb
           var index = (i * 2 + j) % hexagon.segments.length;
           path.add(hexagon.segments[index].clone());
         }
@@ -113,11 +125,11 @@
           hexagon.fillColor = color;
           var top = piece.children[1];
           top.fillColor = color.clone();
-          top.fillColor.brightness *= 1.5;
+          top.fillColor.brightness *= values.topHexColor;
 
           var right = piece.children[2];
           right.fillColor = color.clone();
-          right.fillColor.brightness *= 0.5;
+          right.fillColor.brightness *= values.rightHexColor;
         }
       }
       count += values.amount;
@@ -159,6 +171,8 @@
     window.globals = {
       polygonWidth: Math.floor(Math.random() * 40),
       sideCount: 6,
+      topColor: 1.5,
+      rightColor: 0.5,
     }
 
     window.onload = function () {
@@ -171,13 +185,23 @@
             break;
           }
         }
-      }
+      };
       // Controls pixel/polygon sidecount
       document.getElementById("changeSideCount").onclick = function () {
         let newSideValue = document.getElementById('numberOfSides').value;
         window.globals.newSideCount(parseInt(newSideValue))
-      }
-    }
+      };
+      // Controls topHexagonColor brightness
+      document.getElementById("changeTopHexColor").onclick = function () {
+        let newTopHexColor = document.getElementById('topHexColorInput').value;
+        window.globals.newTopHexColor(newTopHexColor);
+      };
+      // Controls bottomHexagonColor brightness
+      document.getElementById("changeRightHexColor").onclick = function () {
+        let newRightHexColor = document.getElementById('rightHexColorInput').value;
+        window.globals.newRightHexColor(newRightHexColor);
+      };
+    };
   </script>
   <div>
     <h1>Density</h1>
@@ -189,12 +213,26 @@
     <input type="radio" name="densityOfPolygons" value="20">
     <label>40</label>
     <input type="radio" name="densityOfPolygons" value="40">
+    <label>60</label>
+    <input type="radio" name="densityOfPolygons" value="60">
+    <label>80</label>
+    <input type="radio" name="densityOfPolygons" value="80">
     <button id="changePolygons">CHANGE DENSITY</button>
   </div>
   <div>
     <h1>Side Count</h1>
     <input type="range" id="numberOfSides" min="1" max="12" default="6" step="1">
     <button id="changeSideCount">CHANGE SIDE COUNT</button>
+  </div>
+  <div>
+    <h1>Hexagon Top Brightness</h1>
+    <input type="number" step="0.1" min="-12" max="12" value="1.5" name="topHexColor" id="topHexColorInput">
+    <button id="changeTopHexColor">CHANGE TOP HEXAGON</button>
+  </div>
+  <div>
+    <h1>Hexagon Right Brightness</h1>
+    <input type="number" step="0.1" min="-12" max="12" value="0.5" name="rightHexColor" id="rightHexColorInput">
+    <button id="changeRightHexColor">CHANGE RIGHT HEXAGON</button>
   </div>
   <canvas id="myCanvas">
     <img src="assets/images/girl-pearl-earring.jpg" alt="girl with pearl earring painting" id="girl-pearl-earring">
